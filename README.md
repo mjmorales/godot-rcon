@@ -14,6 +14,22 @@ A Source RCON (Remote Console) protocol server implementation for Godot Engine, 
 
 ## Installation
 
+### Method 1: Quick Install (Recommended)
+
+Run this command from your Godot project root directory:
+
+```bash
+curl -sSL https://raw.githubusercontent.com/USERNAME/godot-rcon/main/install.sh | bash
+```
+
+Or with wget:
+
+```bash
+wget -qO- https://raw.githubusercontent.com/USERNAME/godot-rcon/main/install.sh | bash
+```
+
+### Method 2: Manual Installation
+
 1. Download or clone this repository
 2. Copy the `addons/godot_rcon` folder to your project's `addons/` directory
 3. Enable the plugin in Project Settings > Plugins > "Godot RCON Server"
