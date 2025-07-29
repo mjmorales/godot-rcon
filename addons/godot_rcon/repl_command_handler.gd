@@ -36,11 +36,11 @@ func _handle_eval(expression: String) -> String:
 	if expression.is_empty():
 		return "Error: Empty expression"
 	
-	var evaluator = load("res://scripting/gdscript_evaluator.gd")
+	var evaluator = load("res://addons/godot_rcon/gdscript_evaluator.gd")
 	var result = evaluator.evaluate_expression(expression, null)
 	
 	if result.success:
-		var security = load("res://security/dev_security.gd")
+		var security = load("res://addons/godot_rcon/dev_security.gd")
 		var value_str = security.sanitize_output(result.value)
 		return "Result (%s): %s" % [result.type, value_str]
 	else:
@@ -50,7 +50,7 @@ func _handle_exec(code: String) -> String:
 	if code.is_empty():
 		return "Error: Empty code block"
 	
-	var evaluator = load("res://scripting/gdscript_evaluator.gd")
+	var evaluator = load("res://addons/godot_rcon/gdscript_evaluator.gd")
 	var result = evaluator.evaluate_multiline_code(code)
 	
 	if result.success:

@@ -10,6 +10,8 @@ var enforce_dev_security: bool = true
 
 # Preload required classes
 const RCONProtocol = preload("res://addons/godot_rcon/rcon_protocol.gd")
+const REPLCommandHandler = preload("res://addons/godot_rcon/repl_command_handler.gd")
+const DevSecurity = preload("res://addons/godot_rcon/dev_security.gd")
 
 var tcp_server: TCPServer
 var port: int = 27015
