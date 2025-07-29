@@ -46,6 +46,10 @@ var rcon_server = get_node("/root/RCONServer")
 rcon_server.port = 27015  # Default RCON port
 rcon_server.password = "your_secure_password"  # Set empty string for no auth
 
+# Built-in REPL and security (enabled by default)
+rcon_server.enable_repl = true  # Use built-in command handler
+rcon_server.enforce_dev_security = true  # Block unsafe commands
+
 # Start the server
 rcon_server.start()
 
@@ -155,6 +159,19 @@ help
 - **Consider IP whitelisting** at the firewall level
 - **Disable in release builds** unless specifically needed for production monitoring
 - The RCON server has full access to the Godot scripting API - treat it as admin access
+
+### Built-in Security Features
+
+The addon includes security features that are enabled by default:
+
+- **Command Filtering**: Blocks potentially dangerous operations like file system access, network requests, and script modifications
+- **Safe Evaluation**: Prevents code injection and malicious script execution
+- **Output Sanitization**: Limits output size and safely formats complex data structures
+
+To disable security checks (not recommended):
+```gdscript
+rcon_server.enforce_dev_security = false
+```
 
 ## API Reference
 

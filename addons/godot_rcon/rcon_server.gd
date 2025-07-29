@@ -4,6 +4,10 @@ signal command_received(command: String, client_id: int)
 signal client_connected(client_id: int)
 signal client_disconnected(client_id: int)
 
+# Enable built-in command handling
+var enable_repl: bool = true
+var enforce_dev_security: bool = true
+
 # Preload required classes
 const RCONProtocol = preload("res://addons/godot_rcon/rcon_protocol.gd")
 
@@ -122,7 +126,22 @@ func _handle_packet(client_id: int, packet: Dictionary):
 		RCONProtocol.PacketType.EXEC_COMMAND:
 			if client_info.authenticated:
 				client_info.last_request_id = packet["request_id"]
-				command_received.emit(packet["body"], client_id)
+				var command = packet["body"]
+				
+				# Use built-in REPL if enabled
+				if enable_repl:
+					# Security check if enabled
+					if enforce_dev_security:
+						if not DevSecurity.is_expression_safe(command) and not DevSecurity.is_code_safe(command):
+							send_response(client_id, "Error: Command blocked by security policy")
+							return
+					
+					# Execute command through REPL handler
+					var response = REPLCommandHandler.handle_command(command)
+					send_response(client_id, response)
+				else:
+					# Emit signal for custom handling
+					command_received.emit(command, client_id)
 			else:
 				_send_error_response(client_id, packet["request_id"], "Not authenticated")
 		_:
