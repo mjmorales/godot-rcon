@@ -1,4 +1,3 @@
-class_name RCONServer
 extends Node
 
 signal command_received(command: String, client_id: int)
