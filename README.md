@@ -162,15 +162,30 @@ help
 
 ### Built-in Security Features
 
-The addon includes security features that are enabled by default:
+The addon includes lightweight security features that are enabled by default:
 
-- **Command Filtering**: Blocks potentially dangerous operations like file system access, network requests, and script modifications
-- **Safe Evaluation**: Prevents code injection and malicious script execution
+- **Dangerous Operation Blocking**: Prevents only truly dangerous operations:
+  - OS command execution (`OS.execute`, `OS.shell_open`, `OS.kill`)
+  - Direct file system access (`FileAccess.open`, `DirAccess.open`)
+  - Script injection (`set_script`, `source_code`, `Expression.new()`)
+  - Project settings modification (`ProjectSettings.save`)
+  - Network server creation (HTTP/TCP/UDP/WebSocket servers)
 - **Output Sanitization**: Limits output size and safely formats complex data structures
+- **Permissive by Default**: All other Godot API calls are allowed, including:
+  - Node manipulation (`queue_free`, `add_child`, etc.)
+  - Resource loading (`load`, `preload`)
+  - Property access and modification
+  - Signal connections
+  - And much more!
 
-To disable security checks (not recommended):
+To disable security checks entirely:
 ```gdscript
 rcon_server.enforce_dev_security = false
+```
+
+To enable command logging for debugging:
+```gdscript
+rcon_server.log_commands = true
 ```
 
 ## API Reference

@@ -1,76 +1,55 @@
 class_name DevSecurity
 extends RefCounted
 
-# Whitelisted Godot API calls for safety
-const SAFE_CLASSES = [
-	"Node", "Node2D", "Node3D", "Control",
-	"Resource", "PackedScene", "Texture2D",
-	"Vector2", "Vector3", "Color", "Transform2D",
-	"Rect2", "AABB", "Basis", "Transform3D",
-	"Quaternion", "Plane", "String", "StringName",
-	"Array", "Dictionary", "PackedByteArray",
-	"PackedInt32Array", "PackedFloat32Array",
-	"PackedStringArray", "PackedVector2Array",
-	"PackedVector3Array", "PackedColorArray"
-]
-
-const UNSAFE_METHODS = [
-	"set_script", "save", "store_var",
-	"execute", "kill", "shell_open",
-	"request", "http_request", "open_compressed",
-	"store_buffer", "store_string", "store_line"
-]
-
-const UNSAFE_KEYWORDS = [
-	"FileAccess", "DirAccess", 
+# Dangerous operations that should be blocked
+const DANGEROUS_OPERATIONS = [
 	"OS.execute", "OS.shell_open", "OS.kill",
-	"Engine.set_editor_hint", "ProjectSettings.save",
-	"HTTPRequest", "HTTPClient", "StreamPeer",
-	"TCPServer", "UDPServer", "PacketPeer", "WebSocket"
+	"FileAccess.open", "DirAccess.open",
+	"ProjectSettings.save", "ProjectSettings.save_custom",
+	".set_script", ".source_code",
+	"Expression.new()", "GDScript.new()"
+]
+
+# Network operations that could be dangerous
+const DANGEROUS_NETWORK = [
+	"HTTPRequest", "HTTPClient", 
+	"TCPServer", "UDPServer", "WebSocketServer"
 ]
 
 const MAX_OUTPUT_LENGTH = 2000
 const MAX_COLLECTION_ITEMS = 100
 
 static func is_expression_safe(expression: String) -> bool:
-	# Check for unsafe methods
-	for unsafe in UNSAFE_METHODS:
-		if unsafe in expression:
-			return false
-	
-	# Check for unsafe keywords
-	for unsafe in UNSAFE_KEYWORDS:
-		if unsafe in expression:
-			return false
-	
-	# Check for file system access patterns
-	if ".open(" in expression or "FileAccess.open" in expression:
-		return false
-	
-	# Check for potential code injection (but allow eval/exec commands)
+	# Allow REPL commands
 	if expression.begins_with("eval ") or expression.begins_with("exec "):
-		return true  # These are REPL commands, not injection attempts
+		return true
 	
-	# Check for GDScript compilation attempts
-	if "GDScript.new()" in expression or "source_code" in expression:
-		return false
+	# Check for dangerous operations
+	for danger in DANGEROUS_OPERATIONS:
+		if danger in expression:
+			return false
+	
+	# Check for dangerous network operations (optional)
+	for danger in DANGEROUS_NETWORK:
+		if danger in expression:
+			return false
 	
 	return true
 
 static func is_code_safe(code: String) -> bool:
-	# For multiline code, apply stricter checks
+	# Check each line for dangerous operations
 	var lines = code.split("\n")
 	
 	for line in lines:
-		if not is_expression_safe(line):
-			return false
+		# Check for dangerous operations
+		for danger in DANGEROUS_OPERATIONS:
+			if danger in line:
+				return false
 		
-		# Additional checks for multiline code
-		if "class" in line or "extends" in line:
-			return false # No class definitions
-		
-		if "signal" in line or "@export" in line:
-			return false # No signal or export declarations
+		# Check for dangerous network operations
+		for danger in DANGEROUS_NETWORK:
+			if danger in line:
+				return false
 	
 	return true
 
