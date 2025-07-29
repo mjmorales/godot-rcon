@@ -6,7 +6,7 @@
 set -e
 
 ADDON_NAME="godot_rcon"
-ADDON_URL="https://github.com/USERNAME/godot-rcon/archive/refs/heads/main.tar.gz"
+ADDON_URL="https://github.com/mjmorales/godot-rcon/archive/refs/heads/main.tar.gz"
 TEMP_DIR=$(mktemp -d)
 
 # Colors for output
@@ -77,4 +77,4 @@ echo "1. Open your project in Godot"
 echo "2. Go to Project → Project Settings → Plugins"
 echo "3. Enable the 'Godot RCON' plugin"
 echo ""
-echo "For more information, visit: https://github.com/USERNAME/godot-rcon"
+echo "For more information, visit: https://github.com/mjmorales/godot-rcon"

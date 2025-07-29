@@ -19,13 +19,13 @@ A Source RCON (Remote Console) protocol server implementation for Godot Engine, 
 Run this command from your Godot project root directory:
 
 ```bash
-curl -sSL https://raw.githubusercontent.com/USERNAME/godot-rcon/main/install.sh | bash
+curl -sSL https://raw.githubusercontent.com/mjmorales/godot-rcon/refs/heads/main/install.sh | bash
 ```
 
 Or with wget:
 
 ```bash
-wget -qO- https://raw.githubusercontent.com/USERNAME/godot-rcon/main/install.sh | bash
+wget -qO- https://raw.githubusercontent.com/mjmorales/godot-rcon/refs/heads/main/install.sh | bash
 ```
 
 ### Method 2: Manual Installation
