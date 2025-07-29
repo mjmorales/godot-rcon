@@ -1,0 +1,6 @@
+# Godot
+.godot
+*.uid
+
+# IDE
+.history
