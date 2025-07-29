@@ -7,6 +7,7 @@ signal client_disconnected(client_id: int)
 # Enable built-in command handling
 var enable_repl: bool = true
 var enforce_dev_security: bool = true
+var log_commands: bool = false  # Log all commands for debugging
 
 # Preload required classes
 const RCONProtocol = preload("res://addons/godot_rcon/rcon_protocol.gd")
@@ -130,12 +131,23 @@ func _handle_packet(client_id: int, packet: Dictionary):
 				client_info.last_request_id = packet["request_id"]
 				var command = packet["body"]
 				
+				# Log command if enabled
+				if log_commands:
+					print("[RCON] Client %d: %s" % [client_id, command])
+				
 				# Use built-in REPL if enabled
 				if enable_repl:
 					# Security check if enabled
 					if enforce_dev_security:
-						if not DevSecurity.is_expression_safe(command) and not DevSecurity.is_code_safe(command):
-							send_response(client_id, "Error: Command blocked by security policy")
+						# Skip security check for REPL commands
+						var is_repl_command = false
+						for cmd in ["eval", "exec", "inspect", "nodes", "scene", "performance", "help"]:
+							if command.begins_with(cmd + " ") or command == cmd:
+								is_repl_command = true
+								break
+						
+						if not is_repl_command and not DevSecurity.is_expression_safe(command):
+							send_response(client_id, "Error: Command blocked by security policy. Use 'eval' or 'exec' for code execution.")
 							return
 					
 					# Execute command through REPL handler

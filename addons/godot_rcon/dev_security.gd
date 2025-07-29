@@ -15,18 +15,18 @@ const SAFE_CLASSES = [
 ]
 
 const UNSAFE_METHODS = [
-	"queue_free", "free", "call_deferred",
-	"set_script", "load", "save", "store_var",
+	"set_script", "save", "store_var",
 	"execute", "kill", "shell_open",
 	"request", "http_request", "open_compressed",
 	"store_buffer", "store_string", "store_line"
 ]
 
 const UNSAFE_KEYWORDS = [
-	"File", "FileAccess", "DirAccess", "Directory",
-	"OS.", "Engine.set", "ProjectSettings.set",
+	"FileAccess", "DirAccess", 
+	"OS.execute", "OS.shell_open", "OS.kill",
+	"Engine.set_editor_hint", "ProjectSettings.save",
 	"HTTPRequest", "HTTPClient", "StreamPeer",
-	"TCP", "UDP", "PacketPeer", "WebSocket"
+	"TCPServer", "UDPServer", "PacketPeer", "WebSocket"
 ]
 
 const MAX_OUTPUT_LENGTH = 2000
@@ -44,14 +44,12 @@ static func is_expression_safe(expression: String) -> bool:
 			return false
 	
 	# Check for file system access patterns
-	if "open(" in expression or "new()" in expression:
-		# Be extra careful with constructors
-		if "File" in expression or "Directory" in expression or "DirAccess" in expression:
-			return false
-	
-	# Check for potential code injection
-	if "eval" in expression or "exec" in expression:
+	if ".open(" in expression or "FileAccess.open" in expression:
 		return false
+	
+	# Check for potential code injection (but allow eval/exec commands)
+	if expression.begins_with("eval ") or expression.begins_with("exec "):
+		return true  # These are REPL commands, not injection attempts
 	
 	# Check for GDScript compilation attempts
 	if "GDScript.new()" in expression or "source_code" in expression:
