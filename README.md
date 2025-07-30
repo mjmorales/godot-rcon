@@ -268,6 +268,62 @@ func _on_command(command: String, client_id: int):
     rcon.send_response(client_id, response)
 ```
 
+## Integration with MCP (Model Context Protocol)
+
+I highly recommend this pairing addon with https://github.com/Coding-Solo/godot-mcp and [rcon-mcp-server](https://github.com/mjmorales/rcon-mcp-server)(shameless plug ☺) to enable AI assistants to interact with your Godot application remotely. 
+
+Letting LLMs self-verify with access to the Godot runtime and call user code without constant supervision has been an amazing boost in productivity for myself and I encourage everyone to give it a try!
+
+### What is MCP?
+
+https://docs.anthropic.com/en/docs/claude-code/mcp
+
+### Setup Instructions
+
+1. **Start your Godot RCON server** (this addon):
+   ```gdscript
+   var rcon = get_node("/root/RCONServer")
+   rcon.password = "your_secure_password"
+   rcon.port = 27015
+   rcon.start()
+   ```
+
+2. **Install and configure rcon-mcp-server**:
+   ```bash
+# Install the MCP server
+# Install the latest version (replace v1.0.0 with desired version)
+curl -sSfL https://raw.githubusercontent.com/mjmorales/rcon-mcp-server/main/bin/install.sh | bash -s v1.0.0
+
+# Download and review the script
+curl -sSfL https://raw.githubusercontent.com/mjmorales/rcon-mcp-server/main/bin/install.sh -o install.sh
+cat install.sh  # Review the script
+bash install.sh v1.0.0
+   ```
+
+3. **Connect through MCP**:
+   The AI assistant can now:
+   - Create a session to your Godot application
+   - Execute GDScript commands remotely
+   - Monitor performance metrics
+   - Inspect and modify the scene tree
+   - Automate testing and debugging tasks
+
+### Example Use Cases
+
+- **Automated Testing**: AI can execute test scenarios and verify game state
+- **Performance Monitoring**: Continuously track FPS, memory usage, and other metrics
+- **Live Debugging**: AI can help diagnose issues by inspecting nodes and executing diagnostic commands
+- **Content Generation**: Dynamically create or modify game objects through AI-driven commands
+- **Game Balancing**: AI can adjust gameplay parameters in real-time based on metrics
+
+### Security Note
+
+When using with MCP, ensure you:
+- Use strong passwords for RCON authentication
+- Run on trusted networks only
+- Consider additional firewall rules to restrict access
+- Keep the built-in security features enabled (`enforce_dev_security = true`)
+
 ## Troubleshooting
 
 ### Server won't start
