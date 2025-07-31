@@ -290,14 +290,14 @@ https://docs.anthropic.com/en/docs/claude-code/mcp
 
 2. **Install and configure rcon-mcp-server**:
    ```bash
-# Install the MCP server
-# Install the latest version (replace v1.0.0 with desired version)
-curl -sSfL https://raw.githubusercontent.com/mjmorales/rcon-mcp-server/main/bin/install.sh | bash -s v1.0.0
-
-# Download and review the script
-curl -sSfL https://raw.githubusercontent.com/mjmorales/rcon-mcp-server/main/bin/install.sh -o install.sh
-cat install.sh  # Review the script
-bash install.sh v1.0.0
+    # Install the MCP server
+    # Install the latest version (replace v1.0.0 with desired version)
+    curl -sSfL https://raw.githubusercontent.com/mjmorales/rcon-mcp-server/main/bin/install.sh | bash -s v1.0.0
+    
+    # Download and review the script
+    curl -sSfL https://raw.githubusercontent.com/mjmorales/rcon-mcp-server/main/bin/install.sh -o install.sh
+    cat install.sh  # Review the script
+    bash install.sh v1.0.0
    ```
 
 3. **Connect through MCP**:
